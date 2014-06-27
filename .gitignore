@@ -11,6 +11,9 @@
 !.gitignore
 !Dockerfile
 
+##### extention list #####
+!*.sh
+
 ##### directory list #####
 !/CentOS
 !/CentOS/*
