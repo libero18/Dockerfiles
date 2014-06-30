@@ -8,7 +8,7 @@ ENV PATH $PATH:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 # パッケージアップデート＆インストール
 RUN yum -y update ;\
     yum -y install --enablerepo=centosplus openssl-devel ;\
-    yum -y install openssh openssh-server openssh-clients sudo python-simplejson
+    yum -y install openssh openssh-server openssh-clients sudo python-simplejson curl
 
 # セキュリティ設定
 RUN sed -i "s/^#auth\t\trequired\tpam_wheel.so use_uid/auth\t\trequired\tpam_wheel.so use_uid/g" /etc/pam.d/su ;\
