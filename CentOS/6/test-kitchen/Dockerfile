@@ -34,13 +34,6 @@ RUN useradd -G wheel -m provisioner ;\
     sudo -u provisioner curl https://github.com/libero18.keys -o /home/provisioner/.ssh/authorized_keys ;\
     chmod 600 /home/provisioner/.ssh/authorized_keys
 
-# sshd設定
-RUN service sshd start ;\
-    service sshd stop
-
 # ポート開放
 EXPOSE 22
-
-# コンテナ起動時に自動実行されるコマンドを指定
-CMD ["/usr/sbin/sshd", "-D"]
 
