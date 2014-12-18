@@ -8,8 +8,13 @@ ENV PATH $PATH:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 # パッケージアップデート＆インストール
 RUN yum -y update ;\
     yum -y install --enablerepo=centosplus openssl-devel ;\
-    yum -y install openssh openssh-server openssh-clients sudo libselinux-python curl
-    yum -y clean all
+    yum -y install openssh openssh-server openssh-clients sudo
+
+# パッケージグループインストール
+RUN yum -y groupinstall "Development tools" ;\
+    yum -y groupinstall "Additional Development" ;\
+    yum -y groupinstall "Desktop Platform Development" ;\
+    yum -y groupinstall "Server Platform Development"
 
 # 初期設定
 RUN sed -i 's/^/#/g' /etc/sysconfig/i18n ;\
