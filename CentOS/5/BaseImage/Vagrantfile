@@ -1,0 +1,59 @@
+# https://github.com/smdahlen/vagrant-digitalocean#configure
+# vagrant up --provision
+
+Dotenv.load
+
+CENTOS_MIRROR_URL     =   "http://ftp.jaist.ac.jp/pub/Linux/CentOS/#{ENV['CENTOS_VERSION']}/os/x86_64/CentOS/"
+DOCKER_TAG            =   "centos#{ENV['CENTOS_VERSION']}"
+
+if !File.exists?(File.dirname(__FILE__) + "/tmp")
+  Dir::mkdir(File.dirname(__FILE__) + "/tmp")
+end
+
+$script = <<SCRIPT
+sudo apt-get update
+sudo apt-get -y upgrade
+sudo apt-get -y install rinse
+sudo apt-get -y clean
+
+sudo wget https://get.docker.io/builds/Linux/x86_64/docker-latest -O /usr/bin/docker
+sudo chmod +x /usr/bin/docker
+
+sudo wget https://raw.githubusercontent.com/dotcloud/docker/master/contrib/init/sysvinit-debian/docker -O /etc/init.d/docker
+sudo chmod +x /etc/init.d/docker
+
+sudo addgroup docker
+sudo gpasswd -a vagrant docker
+sudo update-rc.d -f docker defaults
+sudo cat << EOF > /etc/default/docker
+DOCKER_OPTS="-H 127.0.0.1:4243 -H unix:///var/run/docker.sock"
+EOF
+sudo nohup docker -d < /dev/null > /dev/null 2> /dev/null &
+
+wget https://raw.githubusercontent.com/dotcloud/docker/master/contrib/mkimage-rinse.sh
+chmod +x ./mkimage-rinse.sh
+sed -i "s/^sudo\\s*tar\\s*--numeric-owner\\s*-c\\s*\\.\\s*|\\s*docker\\s*import\\s*-\\s*\\$repo:\\$version/\#$&\\nsudo tar --numeric-owner -zcpf \\/Share\\/#{DOCKER_TAG}\\.tar\\.gz -c \\./g" ./mkimage-rinse.sh
+sed -i "s/^docker\\s*run\\s*-i\\s*-t\\s*\\$repo:\\$version\\s*echo\\s*success/\#$&/g" ./mkimage-rinse.sh
+sudo rm -f /Share/*.tar.gz
+./mkimage-rinse.sh #{ENV['DOCKER_REPO']} centos-5 #{CENTOS_MIRROR_URL}
+SCRIPT
+
+Vagrant.configure('2') do |config|
+  config.vm.define "#{ENV['VM_HOSTNAME']}" do |server|
+
+    config.vm.hostname            =   "#{ENV['VM_HOSTNAME']}"
+    config.vm.box                 =   "#{ENV['VM_BOXNAME']}"
+    config.vm.synced_folder           "./tmp", "/Share", create: true, owner: "vagrant", group: "vagrant"
+
+    config.vm.provider "virtualbox" do |vb|
+      vb.gui                      =   true
+      vb.customize                    ["modifyvm", :id, "--memory", "2048"]
+    end
+
+    config.vm.provision               "shell", inline: "echo 'start provision'"
+    config.vm.provision               "shell", inline: $script
+    config.vm.provision               "shell", inline: "echo 'finish provision'"
+    config.vm.provision               "shell", inline: "echo -e '##################################################################################\ncat ./tmp/#{DOCKER_TAG}.tar.gz | docker import - #{ENV['DOCKER_REPO']}:#{DOCKER_TAG}\ndocker push #{ENV['DOCKER_REPO']}:#{DOCKER_TAG}\n##################################################################################'"
+
+  end
+end
