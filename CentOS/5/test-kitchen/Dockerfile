@@ -18,7 +18,10 @@ RUN sed -i "s/^#auth\t\trequired\tpam_wheel.so use_uid/auth\t\trequired\tpam_whe
     test -d /etc/sudoers.d || mkdir /etc/sudoers.d ;\
     chmod 755 /etc/sudoers.d ;\
     echo "%wheel ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers.d/wheel ;\
-    chmod 440 /etc/sudoers.d/wheel
+    chmod 440 /etc/sudoers.d/wheel ;\
+    sed -i "s/\#RSAAuthentication\s*yes/\#$&\\nRSAAuthentication yes/g" /etc/ssh/sshd_config ;\
+    sed -i "s/\#PubkeyAuthentication\s*yes/\#$&\\nPubkeyAuthentication yes/g" /etc/ssh/sshd_config ;\
+    sed -i "s/\#AuthorizedKeysFile\s*\.ssh/authorized_keys/\#$&\\nAuthorizedKeysFile     .ssh/authorized_keys/g" /etc/ssh/sshd_config
 
 # ユーザ作成
 RUN useradd -G wheel -m provisioner ;\
