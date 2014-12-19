@@ -1,4 +1,4 @@
-FROM libero18/base:centos5.10
+FROM libero18/base:centos5.11
 #
 MAINTAINER NAKAJIMA, Ryuichi (a.k.a. libero18)
 
