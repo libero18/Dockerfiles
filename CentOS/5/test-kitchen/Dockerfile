@@ -27,3 +27,6 @@ RUN useradd -G wheel -m provisioner ;\
     sudo -u provisioner curl https://github.com/libero18.keys -o /home/provisioner/.ssh/authorized_keys ;\
     chmod 600 /home/provisioner/.ssh/authorized_keys
 
+# ポート開放
+EXPOSE 22
+
