@@ -7,7 +7,7 @@ ENV PATH $PATH:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
 # パッケージアップデート＆インストール
 RUN yum -y update ;\
-    yum -y install --enablerepo=centosplus openssl-devel ;\
+    yum -y install --enablerepo=centosplus openssl-devel libselinux-python ;\
     yum -y install openssh openssh-server openssh-clients sudo python-simplejson curl ;\
     yum -y clean all
 
