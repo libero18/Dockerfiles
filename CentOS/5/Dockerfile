@@ -21,7 +21,7 @@ RUN sed -i "s/^#auth\t\trequired\tpam_wheel.so use_uid/auth\t\trequired\tpam_whe
     chmod 440 /etc/sudoers.d/wheel ;\
     sed -i "s/\#RSAAuthentication\s*yes/\#$&\\nRSAAuthentication yes/g" /etc/ssh/sshd_config ;\
     sed -i "s/\#PubkeyAuthentication\s*yes/\#$&\\nPubkeyAuthentication yes/g" /etc/ssh/sshd_config ;\
-    sed -i "s/\#AuthorizedKeysFile\s*\.ssh/authorized_keys/\#$&\\nAuthorizedKeysFile     .ssh/authorized_keys/g" /etc/ssh/sshd_config
+    sed -i "s/\#AuthorizedKeysFile\s*\.ssh\/authorized_keys/\#$&\\nAuthorizedKeysFile \.ssh\/authorized_keys/g" /etc/ssh/sshd_config
 
 # ユーザ作成
 RUN useradd -G wheel -m provisioner ;\
