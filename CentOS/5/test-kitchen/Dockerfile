@@ -28,5 +28,5 @@ RUN useradd -G wheel -m provisioner ;\
     chmod 600 /home/provisioner/.ssh/authorized_keys
 
 # ポート開放
-EXPOSE 22
+EXPOSE 22:22005
 
