@@ -6,7 +6,8 @@ MAINTAINER NAKAJIMA, Ryuichi (a.k.a. libero18)
 ENV PATH $PATH:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
 # パッケージアップデート＆インストール
-RUN yum -y update ;\
+RUN yum -y install yum-fastestmirror ;\
+    yum -y update ;\
     yum -y install --enablerepo=centosplus openssl-devel libselinux-python libselinux-utils libselinux ;\
     yum -y install openssh openssh-server openssh-clients sudo python-simplejson curl ;\
     yum -y clean all
