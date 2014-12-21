@@ -10,13 +10,18 @@
 ##### file list #####
 !.gitignore
 !Dockerfile
+!Vagrantfile
+!README.md
 
 ##### extention list #####
 !*.sh
 
 ##### directory list #####
-!/CentOS
-!/CentOS/*
-!/Ubuntu
-!/Ubuntu/*
+!/CentOS/
+!/CentOS/**/
+!/Ubuntu/
+!/Ubuntu/**/
+
+##### etc. #####
+/CentOS/5/BaseImage/.env
 
